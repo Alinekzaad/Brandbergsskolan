@@ -1,0 +1,158 @@
+@page "{id:guid}"
+@model BrandbergFranvaro.Pages.Franvaro.DetaljerModel
+@{
+    ViewData["Title"] = "Ärendedetaljer";
+}
+
+<div class="mb-4">
+    <a asp-page="/Franvaro/MinaArenden" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Tillbaka till mina ärenden
+    </a>
+</div>
+
+@if (Model.Request != null)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-file-text me-2"></i>Ärendedetaljer</h5>
+                    <span class="badge @Model.Request.Status.ToBadgeClass() fs-6">@Model.Request.Status.ToSwedish()</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Typ av frånvaro</h6>
+                                <div class="detail-value">
+                                    <span class="badge @Model.Request.Type.ToBadgeClass()">@Model.Request.Type.ToSwedish()</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Omfattning</h6>
+                                <div class="detail-value">@Model.Request.DayPart.ToSwedish()</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Period</h6>
+                                <div class="detail-value">
+                                    @Model.Request.PeriodDisplay
+                                    @if (Model.Request.DaysCount > 1)
+                                    {
+                                        <small class="text-muted">(@Model.Request.DaysCount dagar)</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Skapat</h6>
+                                <div class="detail-value">@Model.Request.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Request.Comment))
+                    {
+                        <div class="detail-section">
+                            <h6>Kommentar</h6>
+                            <div class="detail-value bg-light p-3 rounded">@Model.Request.Comment</div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Request.AttachmentPath))
+                    {
+                        <div class="detail-section">
+                            <h6>Bilaga</h6>
+                            <div class="detail-value">
+                                <a asp-page="/Franvaro/Bilaga" asp-route-id="@Model.Request.Id" 
+                                   class="btn btn-outline-primary btn-sm" target="_blank">
+                                    <i class="bi bi-download me-1"></i>Ladda ner bilaga
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Request.AdminComment))
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-chat-square-text me-2"></i>Administratörens kommentar</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.Request.AdminComment</p>
+                    </div>
+                </div>
+            }
+
+            @if (Model.Request.Status == AbsenceStatus.Skickad)
+            {
+                <div class="d-flex gap-2">
+                    <a asp-page="/Franvaro/Redigera" asp-route-id="@Model.Request.Id" class="btn btn-primary">
+                        <i class="bi bi-pencil me-1"></i>Redigera
+                    </a>
+                    <form method="post" asp-page="/Franvaro/MinaArenden" asp-page-handler="Delete" asp-route-id="@Model.Request.Id"
+                          onsubmit="return confirm('Är du säker på att du vill ta bort detta ärende?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-trash me-1"></i>Ta bort
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-info-circle me-1"></i>Information</h6>
+                    <hr>
+                    <p class="small text-muted mb-2">
+                        <strong>Ärende-ID:</strong><br>
+                        <code>@Model.Request.Id</code>
+                    </p>
+                    <p class="small text-muted mb-2">
+                        <strong>Senast uppdaterat:</strong><br>
+                        @Model.Request.UpdatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                    </p>
+                    @if (Model.Request.Status == AbsenceStatus.Skickad)
+                    {
+                        <div class="alert alert-info mb-0 mt-3">
+                            <i class="bi bi-clock me-1"></i>
+                            <small>Ärendet väntar på beslut från administratör.</small>
+                        </div>
+                    }
+                    else if (Model.Request.Status == AbsenceStatus.Godkänd)
+                    {
+                        <div class="alert alert-success mb-0 mt-3">
+                            <i class="bi bi-check-circle me-1"></i>
+                            <small>Ärendet har godkänts.</small>
+                        </div>
+                    }
+                    else if (Model.Request.Status == AbsenceStatus.Avslagen)
+                    {
+                        <div class="alert alert-danger mb-0 mt-3">
+                            <i class="bi bi-x-circle me-1"></i>
+                            <small>Ärendet har avslagits.</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>Ärendet hittades inte.
+    </div>
+}
+

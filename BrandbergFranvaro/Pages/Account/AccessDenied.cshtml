@@ -1,0 +1,17 @@
+@page
+@model BrandbergFranvaro.Pages.Account.AccessDeniedModel
+@{
+    ViewData["Title"] = "Åtkomst nekad";
+}
+
+<div class="text-center py-5">
+    <i class="bi bi-shield-x text-danger" style="font-size: 4rem;"></i>
+    <h2 class="mt-3">Åtkomst nekad</h2>
+    <p class="text-muted">Du har inte behörighet att visa den här sidan.</p>
+    <div class="mt-4">
+        <a asp-page="/Index" class="btn btn-primary">
+            <i class="bi bi-house me-2"></i>Gå till startsidan
+        </a>
+    </div>
+</div>
+

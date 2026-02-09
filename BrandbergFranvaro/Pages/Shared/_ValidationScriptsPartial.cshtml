@@ -1,0 +1,15 @@
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    // Svenska valideringsmeddelanden
+    $.extend($.validator.messages, {
+        required: "Detta fält är obligatoriskt.",
+        email: "Ange en giltig e-postadress.",
+        minlength: $.validator.format("Ange minst {0} tecken."),
+        maxlength: $.validator.format("Ange högst {0} tecken."),
+        date: "Ange ett giltigt datum.",
+        number: "Ange ett giltigt nummer."
+    });
+</script>
+

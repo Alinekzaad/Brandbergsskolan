@@ -1,0 +1,299 @@
+/* Brandbergsskolan - Frånvarohantering */
+/* Huvudstilar */
+
+:root {
+    --brandberg-primary: #0d6efd;
+    --brandberg-secondary: #6c757d;
+    --brandberg-success: #198754;
+    --brandberg-warning: #ffc107;
+    --brandberg-danger: #dc3545;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: #f8f9fa;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.25rem;
+}
+
+.navbar-brand i {
+    font-size: 1.5rem;
+}
+
+/* Dashboard-kort */
+.dashboard-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: none;
+    border-radius: 12px;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card {
+    border-left: 4px solid var(--brandberg-primary);
+}
+
+.stat-card.success {
+    border-left-color: var(--brandberg-success);
+}
+
+.stat-card.warning {
+    border-left-color: var(--brandberg-warning);
+}
+
+.stat-card.danger {
+    border-left-color: var(--brandberg-danger);
+}
+
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Tabeller */
+.table-hover tbody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+.table th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+}
+
+/* Formulär */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.375rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brandberg-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* Knappar */
+.btn {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+}
+
+.btn-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Kort */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+}
+
+/* Filter-sektion */
+.filter-section {
+    background-color: #fff;
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-section .form-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Statusindikator */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.skickad {
+    background-color: var(--brandberg-warning);
+}
+
+.status-dot.godkänd {
+    background-color: var(--brandberg-success);
+}
+
+.status-dot.avslagen {
+    background-color: var(--brandberg-danger);
+}
+
+/* Quick action cards */
+.quick-action-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.quick-action-card:hover {
+    color: inherit;
+}
+
+.quick-action-card .card {
+    transition: all 0.2s ease-in-out;
+}
+
+.quick-action-card:hover .card {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Login-sida */
+.login-container {
+    max-width: 420px;
+    margin: 2rem auto;
+}
+
+.login-card {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.login-header {
+    background: linear-gradient(135deg, var(--brandberg-primary), #0056b3);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.login-header i {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Detaljvy */
+.detail-section {
+    margin-bottom: 1.5rem;
+}
+
+.detail-section h6 {
+    color: #6c757d;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.detail-value {
+    font-size: 1rem;
+    color: #212529;
+}
+
+/* Responsiva justeringar */
+@media (max-width: 768px) {
+    .stat-card .stat-number {
+        font-size: 2rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn-group-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .btn-group-mobile .btn {
+        width: 100%;
+    }
+}
+
+/* Filuppladdning */
+.file-upload-wrapper {
+    position: relative;
+}
+
+.file-upload-info {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Bekräftelsemodal */
+.modal-confirm .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.modal-confirm .modal-footer {
+    border-top: none;
+    padding-top: 0;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Footer */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .footer,
+    .btn,
+    .filter-section {
+        display: none !important;
+    }
+    
+    body {
+        background-color: white;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+

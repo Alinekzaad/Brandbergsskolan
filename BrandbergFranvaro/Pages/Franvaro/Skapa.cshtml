@@ -1,0 +1,112 @@
+@page
+@model BrandbergFranvaro.Pages.Franvaro.SkapaModel
+@{
+    ViewData["Title"] = "Registrera frånvaro";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Registrera frånvaro</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    
+                    <!-- Typ av frånvaro -->
+                    <div class="mb-3">
+                        <label asp-for="Input.Type" class="form-label">
+                            <i class="bi bi-tag me-1"></i>Typ av frånvaro <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Input.Type" class="form-select" id="Type" required>
+                            <option value="">-- Välj typ --</option>
+                            <option value="1">Sjuk</option>
+                            <option value="2">VAB (Vård av barn)</option>
+                            <option value="3">Semester</option>
+                            <option value="4">Ledig</option>
+                            <option value="5">Annat</option>
+                        </select>
+                        <span asp-validation-for="Input.Type" class="text-danger"></span>
+                    </div>
+
+                    <!-- Datum -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.StartDate" class="form-label">
+                                <i class="bi bi-calendar-event me-1"></i>Startdatum <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.StartDate" type="date" class="form-control" id="StartDate" required />
+                            <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.EndDate" class="form-label">
+                                <i class="bi bi-calendar-event me-1"></i>Slutdatum <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.EndDate" type="date" class="form-control" id="EndDate" required />
+                            <span asp-validation-for="Input.EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Omfattning -->
+                    <div class="mb-3">
+                        <label asp-for="Input.DayPart" class="form-label">
+                            <i class="bi bi-clock me-1"></i>Omfattning <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Input.DayPart" class="form-select" id="DayPart" required>
+                            <option value="1">Heldag</option>
+                            <option value="2">Halvdag – Förmiddag</option>
+                            <option value="3">Halvdag – Eftermiddag</option>
+                        </select>
+                        <span asp-validation-for="Input.DayPart" class="text-danger"></span>
+                        <div id="halfDayInfo" class="form-text text-info" style="display: none;">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Halvdag gäller endast om start- och slutdatum är samma dag.
+                        </div>
+                    </div>
+
+                    <!-- Kommentar -->
+                    <div class="mb-3">
+                        <label asp-for="Input.Comment" class="form-label">
+                            <i class="bi bi-chat-text me-1"></i>Kommentar
+                        </label>
+                        <textarea asp-for="Input.Comment" class="form-control" id="Comment" rows="3" 
+                                  maxlength="1000" placeholder="Ange eventuell kommentar..."></textarea>
+                        <span asp-validation-for="Input.Comment" class="text-danger"></span>
+                        <div id="commentHelp" class="form-text">Valfritt. Max 1000 tecken.</div>
+                    </div>
+
+                    <!-- Bilaga -->
+                    <div class="mb-4">
+                        <label asp-for="Input.Attachment" class="form-label">
+                            <i class="bi bi-paperclip me-1"></i>Bilaga (valfritt)
+                        </label>
+                        <input asp-for="Input.Attachment" type="file" class="form-control" 
+                               accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                        <span asp-validation-for="Input.Attachment" class="text-danger"></span>
+                        <div id="fileFeedback" class="form-text"></div>
+                        <div class="file-upload-info">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Tillåtna format: PDF, JPG, PNG. Max storlek: 5 MB.
+                        </div>
+                    </div>
+
+                    <!-- Knappar -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-page="/Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Avbryt
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-1"></i>Skicka in
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

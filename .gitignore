@@ -1,0 +1,45 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# .NET
+*.dll
+*.exe
+*.pdb
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE
+.idea/
+.vs/
+*.swp
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Database
+*.db
+*.db-journal
+
+# Uploads
+App_Data/Uploads/*
+!App_Data/Uploads/.gitkeep
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Secrets (if any)
+appsettings.*.local.json
+secrets.json

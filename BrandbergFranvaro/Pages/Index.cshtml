@@ -1,0 +1,250 @@
+@page
+@model BrandbergFranvaro.Pages.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@if (!User.Identity?.IsAuthenticated ?? true)
+{
+    <div class="text-center py-5">
+        <i class="bi bi-calendar-check text-primary" style="font-size: 5rem;"></i>
+        <h1 class="mt-4">Välkommen till Brandbergsskolans Frånvarohantering</h1>
+        <p class="lead text-muted">Logga in för att registrera och hantera frånvaro.</p>
+        <a asp-page="/Account/Login" class="btn btn-primary btn-lg mt-3">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Logga in
+        </a>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Dashboard</h1>
+            <p class="text-muted mb-0">Välkommen, @Model.CurrentUser?.FullName!</p>
+        </div>
+        <a asp-page="/Franvaro/Skapa" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Ny frånvaroanmälan
+        </a>
+    </div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <!-- Admin Dashboard -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card warning h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Väntar på beslut</h6>
+                                <div class="stat-number text-warning">@Model.PendingCount</div>
+                            </div>
+                            <span class="badge bg-warning text-dark p-2">
+                                <i class="bi bi-hourglass-split fs-4"></i>
+                            </span>
+                        </div>
+                        <small class="text-muted">Senaste 30 dagarna</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card success h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Godkända</h6>
+                                <div class="stat-number text-success">@Model.ApprovedCount</div>
+                            </div>
+                            <span class="badge bg-success p-2">
+                                <i class="bi bi-check-circle fs-4"></i>
+                            </span>
+                        </div>
+                        <small class="text-muted">Senaste 30 dagarna</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Avslagna</h6>
+                                <div class="stat-number text-danger">@Model.RejectedCount</div>
+                            </div>
+                            <span class="badge bg-danger p-2">
+                                <i class="bi bi-x-circle fs-4"></i>
+                            </span>
+                        </div>
+                        <small class="text-muted">Senaste 30 dagarna</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Senaste ärenden för admin -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Senaste ärenden</h5>
+                <a asp-page="/Admin/AllaArenden" class="btn btn-outline-primary btn-sm">
+                    Visa alla <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecentRequests.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Person</th>
+                                    <th>Period</th>
+                                    <th>Typ</th>
+                                    <th>Status</th>
+                                    <th>Skapat</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var request in Model.RecentRequests)
+                                {
+                                    <tr>
+                                        <td>@request.User?.FullName</td>
+                                        <td>@request.PeriodDisplay</td>
+                                        <td><span class="badge @request.Type.ToBadgeClass()">@request.Type.ToSwedish()</span></td>
+                                        <td><span class="badge @request.Status.ToBadgeClass()">@request.Status.ToSwedish()</span></td>
+                                        <td>@request.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            <a asp-page="/Admin/Detaljer" asp-route-id="@request.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Inga ärenden att visa.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Personal Dashboard -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <a asp-page="/Franvaro/Skapa" class="quick-action-card">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-plus-circle text-primary" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Registrera frånvaro</h5>
+                            <p class="text-muted mb-0">Skapa en ny frånvaroanmälan</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a asp-page="/Franvaro/MinaArenden" class="quick-action-card">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-list-ul text-primary" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Mina ärenden</h5>
+                            <p class="text-muted mb-0">Se och hantera dina anmälningar</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Översikt för personal -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card warning h-100">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2">Väntar på beslut</h6>
+                        <div class="stat-number text-warning">@Model.PendingCount</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card success h-100">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2">Godkända</h6>
+                        <div class="stat-number text-success">@Model.ApprovedCount</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card danger h-100">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2">Avslagna</h6>
+                        <div class="stat-number text-danger">@Model.RejectedCount</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Senaste ärenden för personal -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Mina senaste ärenden</h5>
+                <a asp-page="/Franvaro/MinaArenden" class="btn btn-outline-primary btn-sm">
+                    Visa alla <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecentRequests.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Typ</th>
+                                    <th>Omfattning</th>
+                                    <th>Status</th>
+                                    <th>Skapat</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var request in Model.RecentRequests)
+                                {
+                                    <tr>
+                                        <td>@request.PeriodDisplay</td>
+                                        <td><span class="badge @request.Type.ToBadgeClass()">@request.Type.ToSwedish()</span></td>
+                                        <td>@request.DayPart.ToSwedish()</td>
+                                        <td><span class="badge @request.Status.ToBadgeClass()">@request.Status.ToSwedish()</span></td>
+                                        <td>@request.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            <a asp-page="/Franvaro/Detaljer" asp-route-id="@request.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Du har inga ärenden ännu.</p>
+                        <a asp-page="/Franvaro/Skapa" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Skapa ditt första ärende
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+

@@ -1,0 +1,233 @@
+@page "{id:guid}"
+@model BrandbergFranvaro.Pages.Admin.DetaljerModel
+@{
+    ViewData["Title"] = "Hantera ärende";
+}
+
+<div class="mb-4">
+    <a asp-page="/Admin/AllaArenden" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Tillbaka till alla ärenden
+    </a>
+</div>
+
+@if (Model.Request != null)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Ärendeinformation -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-file-text me-2"></i>Ärendedetaljer</h5>
+                    <span class="badge @Model.Request.Status.ToBadgeClass() fs-6">@Model.Request.Status.ToSwedish()</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Person</h6>
+                                <div class="detail-value">
+                                    <strong>@Model.Request.User?.FullName</strong>
+                                    <small class="text-muted d-block">@Model.Request.User?.Email</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Typ av frånvaro</h6>
+                                <div class="detail-value">
+                                    <span class="badge @Model.Request.Type.ToBadgeClass()">@Model.Request.Type.ToSwedish()</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Period</h6>
+                                <div class="detail-value">
+                                    @Model.Request.PeriodDisplay
+                                    @if (Model.Request.DaysCount > 1)
+                                    {
+                                        <small class="text-muted">(@Model.Request.DaysCount dagar)</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Omfattning</h6>
+                                <div class="detail-value">@Model.Request.DayPart.ToSwedish()</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Skapat</h6>
+                                <div class="detail-value">@Model.Request.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h6>Senast uppdaterat</h6>
+                                <div class="detail-value">@Model.Request.UpdatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Request.Comment))
+                    {
+                        <div class="detail-section">
+                            <h6>Kommentar från personal</h6>
+                            <div class="detail-value bg-light p-3 rounded">@Model.Request.Comment</div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Request.AttachmentPath))
+                    {
+                        <div class="detail-section">
+                            <h6>Bilaga</h6>
+                            <div class="detail-value">
+                                <a asp-page="/Franvaro/Bilaga" asp-route-id="@Model.Request.Id" 
+                                   class="btn btn-outline-primary btn-sm" target="_blank">
+                                    <i class="bi bi-download me-1"></i>Ladda ner bilaga
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Befintlig admin-kommentar -->
+            @if (!string.IsNullOrWhiteSpace(Model.Request.AdminComment) && Model.Request.Status != AbsenceStatus.Skickad)
+            {
+                <div class="card shadow-sm mb-4 @(Model.Request.Status == AbsenceStatus.Godkänd ? "border-success" : "border-danger")">
+                    <div class="card-header @(Model.Request.Status == AbsenceStatus.Godkänd ? "bg-success text-white" : "bg-danger text-white")">
+                        <h5 class="mb-0">
+                            <i class="bi bi-chat-square-text me-2"></i>
+                            Beslut: @Model.Request.Status.ToSwedish()
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.Request.AdminComment</p>
+                    </div>
+                </div>
+            }
+
+            <!-- Åtgärder -->
+            @if (Model.Request.Status == AbsenceStatus.Skickad)
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-check2-square me-2"></i>Fatta beslut</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <label asp-for="AdminComment" class="form-label">
+                                    Admin-kommentar <span class="text-muted">(obligatorisk vid avslag)</span>
+                                </label>
+                                <textarea asp-for="AdminComment" class="form-control" rows="3" 
+                                          placeholder="Skriv en kommentar..."></textarea>
+                                <span asp-validation-for="AdminComment" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" asp-page-handler="Approve" class="btn btn-success">
+                                    <i class="bi bi-check-lg me-1"></i>Godkänn
+                                </button>
+                                <button type="submit" asp-page-handler="Reject" class="btn btn-danger">
+                                    <i class="bi bi-x-lg me-1"></i>Avslå
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-arrow-counterclockwise me-2"></i>Ändra beslut</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <label asp-for="AdminComment" class="form-label">
+                                    Uppdatera admin-kommentar
+                                </label>
+                                <textarea asp-for="AdminComment" class="form-control" rows="3">@Model.Request.AdminComment</textarea>
+                                <span asp-validation-for="AdminComment" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-flex gap-2 flex-wrap">
+                                @if (Model.Request.Status != AbsenceStatus.Godkänd)
+                                {
+                                    <button type="submit" asp-page-handler="Approve" class="btn btn-success">
+                                        <i class="bi bi-check-lg me-1"></i>Ändra till Godkänd
+                                    </button>
+                                }
+                                @if (Model.Request.Status != AbsenceStatus.Avslagen)
+                                {
+                                    <button type="submit" asp-page-handler="Reject" class="btn btn-danger">
+                                        <i class="bi bi-x-lg me-1"></i>Ändra till Avslagen
+                                    </button>
+                                }
+                                <button type="submit" asp-page-handler="Reset" class="btn btn-warning">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i>Återställ till Skickad
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-info-circle me-1"></i>Information</h6>
+                    <hr>
+                    <p class="small text-muted mb-2">
+                        <strong>Ärende-ID:</strong><br>
+                        <code>@Model.Request.Id</code>
+                    </p>
+                    <p class="small text-muted mb-2">
+                        <strong>Användar-ID:</strong><br>
+                        <code>@Model.Request.UserId</code>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mt-3 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-1"></i>Farlig zon</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        Permanent borttagning av ärendet kan inte ångras.
+                    </p>
+                    <form method="post" asp-page-handler="Delete" 
+                          onsubmit="return confirm('Är du HELT säker på att du vill ta bort detta ärende permanent? Detta kan inte ångras.');">
+                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                            <i class="bi bi-trash me-1"></i>Ta bort permanent
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>Ärendet hittades inte.
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
