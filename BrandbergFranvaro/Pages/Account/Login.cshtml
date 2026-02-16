@@ -2,78 +2,359 @@
 @model BrandbergFranvaro.Pages.Account.LoginModel
 @{
     ViewData["Title"] = "Logga in";
-    Layout = "_Layout";
+    Layout = null;
 }
 
-<div class="login-container">
-    <div class="card login-card shadow">
-        <div class="login-header">
-            <i class="bi bi-calendar-check d-block"></i>
-            <h3 class="mb-0">Brandbergsskolan</h3>
-            <small>Frånvarohantering</small>
-        </div>
-        <div class="card-body p-4">
-            <h5 class="card-title text-center mb-4">Logga in</h5>
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logga in - Brandbergsskolan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .login-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Hero Section - Left Side */
+        .hero-section {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+            display: none;
+        }
+        
+        @@media (min-width: 992px) {
+            .hero-section {
+                display: block;
+            }
+        }
+        
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 51, 102, 0.7) 0%,
+                rgba(0, 82, 147, 0.5) 50%,
+                rgba(0, 102, 179, 0.3) 100%
+            );
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3rem;
+            color: white;
+        }
+        
+        .hero-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 400px;
+        }
+        
+        .hero-badge {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        
+        /* Login Section - Right Side */
+        .login-section {
+            flex: 0 0 100%;
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        @@media (min-width: 992px) {
+            .login-section {
+                flex: 0 0 480px;
+                max-width: 480px;
+            }
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #0066b3 0%, #004080 100%);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 102, 179, 0.3);
+        }
+        
+        .login-logo .icon-circle i {
+            font-size: 1.75rem;
+            color: white;
+        }
+        
+        .login-logo h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+        
+        .login-logo p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #0066b3;
+            box-shadow: 0 0 0 3px rgba(0, 102, 179, 0.1);
+        }
+        
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #0066b3 0%, #004080 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.875rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 179, 0.3);
+            background: linear-gradient(135deg, #0077cc 0%, #005299 100%);
+        }
+        
+        .form-check-input:checked {
+            background-color: #0066b3;
+            border-color: #0066b3;
+        }
+        
+        .test-accounts {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e1;
+        }
+        
+        .test-accounts h6 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+        
+        .test-accounts small {
+            color: #475569;
+            line-height: 1.6;
+        }
+        
+        .swedish-flag {
+            width: 24px;
+            height: 16px;
+            background: #006aa7;
+            position: relative;
+            border-radius: 2px;
+        }
+        
+        .swedish-flag::before {
+            content: '';
+            position: absolute;
+            background: #fecc00;
+            top: 0;
+            left: 7px;
+            width: 4px;
+            height: 100%;
+        }
+        
+        .swedish-flag::after {
+            content: '';
+            position: absolute;
+            background: #fecc00;
+            top: 6px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <img src="/images/hero.jpg" alt="Brandbergsskolan" class="hero-image" />
+            <div class="hero-overlay"></div>
             
-            <form method="post" class="needs-validation" novalidate>
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                
-                <div class="mb-3">
-                    <label asp-for="Input.Email" class="form-label">
-                        <i class="bi bi-envelope me-1"></i>E-postadress
-                    </label>
-                    <input asp-for="Input.Email" class="form-control form-control-lg" 
-                           placeholder="namn@brandberg.se" autocomplete="email" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <div class="hero-badge">
+                <div class="swedish-flag"></div>
+                <span>Haninge kommun</span>
+            </div>
+            
+            <div class="hero-content">
+                <h1>Brandbergsskolan</h1>
+                <p>Välkommen till vårt digitala system för frånvarohantering. Enkelt och säkert.</p>
+            </div>
+        </div>
+        
+        <!-- Login Section -->
+        <div class="login-section">
+            <div class="login-container">
+                <div class="login-logo">
+                    <div class="icon-circle">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h2>Frånvarohantering</h2>
+                    <p>Logga in för att fortsätta</p>
                 </div>
                 
-                <div class="mb-3">
-                    <label asp-for="Input.Password" class="form-label">
-                        <i class="bi bi-lock me-1"></i>Lösenord
-                    </label>
-                    <input asp-for="Input.Password" class="form-control form-control-lg" 
-                           placeholder="••••••••" autocomplete="current-password" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-4">
-                    <div class="form-check">
-                        <input asp-for="Input.RememberMe" class="form-check-input" />
-                        <label asp-for="Input.RememberMe" class="form-check-label">
-                            Kom ihåg mig
-                        </label>
+                <div class="login-card">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label">
+                                <i class="bi bi-envelope me-1"></i>E-postadress
+                            </label>
+                            <input asp-for="Input.Email" class="form-control" 
+                                   placeholder="namn@brandberg.se" autocomplete="email" />
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label">
+                                <i class="bi bi-lock me-1"></i>Lösenord
+                            </label>
+                            <input asp-for="Input.Password" class="form-control" 
+                                   placeholder="••••••••" autocomplete="current-password" />
+                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input asp-for="Input.RememberMe" class="form-check-input" />
+                                <label asp-for="Input.RememberMe" class="form-check-label small">
+                                    Kom ihåg mig på denna enhet
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-login">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Logga in
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="test-accounts">
+                        <h6><i class="bi bi-info-circle me-1"></i>Testkonton</h6>
+                        <small>
+                            <strong>Admin:</strong> admin@brandberg.se<br>
+                            <strong>Personal:</strong> personal@brandberg.se<br>
+                            <strong>Lösenord:</strong> Password123!
+                        </small>
                     </div>
                 </div>
                 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Logga in
-                    </button>
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check me-1"></i>Säker anslutning
+                    </small>
                 </div>
-            </form>
-        </div>
-        <div class="card-footer bg-light text-center py-3">
-            <small class="text-muted">
-                <i class="bi bi-shield-check me-1"></i>Säker inloggning
-            </small>
-        </div>
-    </div>
-    
-    <div class="text-center mt-4">
-        <div class="card bg-light">
-            <div class="card-body py-3">
-                <h6 class="card-title mb-2"><i class="bi bi-info-circle me-1"></i>Testkonton</h6>
-                <small class="text-muted d-block">
-                    <strong>Admin:</strong> admin@brandberg.se<br>
-                    <strong>Personal:</strong> personal@brandberg.se<br>
-                    <strong>Lösenord:</strong> Password123!
-                </small>
             </div>
         </div>
     </div>
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
