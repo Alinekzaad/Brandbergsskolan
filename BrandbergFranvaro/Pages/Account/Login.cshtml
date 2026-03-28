@@ -13,10 +13,13 @@
     <title>Logga in - Brandbergsskolan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
         * {
-            font-family: 'Inter', sans-serif;
+            font-family: "Source Sans 3", system-ui, sans-serif;
         }
         
         body {
@@ -34,7 +37,7 @@
         .hero-section {
             flex: 1;
             position: relative;
-            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+            background: linear-gradient(135deg, #0f3550 0%, #0c4a6e 100%);
             display: none;
         }
         
@@ -61,9 +64,9 @@
             height: 100%;
             background: linear-gradient(
                 135deg,
-                rgba(0, 51, 102, 0.7) 0%,
-                rgba(0, 82, 147, 0.5) 50%,
-                rgba(0, 102, 179, 0.3) 100%
+                rgba(8, 36, 54, 0.78) 0%,
+                rgba(12, 74, 110, 0.5) 50%,
+                rgba(12, 74, 110, 0.25) 100%
             );
         }
         
@@ -113,7 +116,7 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+            background: linear-gradient(180deg, #eef2f6 0%, #e2e8f0 100%);
         }
         
         @@media (min-width: 992px) {
@@ -136,13 +139,13 @@
         .login-logo .icon-circle {
             width: 70px;
             height: 70px;
-            background: linear-gradient(135deg, #0066b3 0%, #004080 100%);
+            background: linear-gradient(135deg, #0c4a6e 0%, #07324a 100%);
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 1rem;
-            box-shadow: 0 10px 30px rgba(0, 102, 179, 0.3);
+            box-shadow: 0 10px 30px rgba(12, 74, 110, 0.35);
         }
         
         .login-logo .icon-circle i {
@@ -186,8 +189,8 @@
         }
         
         .form-control:focus {
-            border-color: #0066b3;
-            box-shadow: 0 0 0 3px rgba(0, 102, 179, 0.1);
+            border-color: #0c4a6e;
+            box-shadow: 0 0 0 3px rgba(12, 74, 110, 0.15);
         }
         
         .form-control::placeholder {
@@ -195,7 +198,7 @@
         }
         
         .btn-login {
-            background: linear-gradient(135deg, #0066b3 0%, #004080 100%);
+            background: linear-gradient(135deg, #0c4a6e 0%, #07324a 100%);
             border: none;
             border-radius: 10px;
             padding: 0.875rem;
@@ -206,13 +209,13 @@
         
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 102, 179, 0.3);
-            background: linear-gradient(135deg, #0077cc 0%, #005299 100%);
+            box-shadow: 0 8px 20px rgba(12, 74, 110, 0.35);
+            background: linear-gradient(135deg, #0d5680 0%, #082f45 100%);
         }
         
         .form-check-input:checked {
-            background-color: #0066b3;
-            border-color: #0066b3;
+            background-color: #0c4a6e;
+            border-color: #0c4a6e;
         }
         
         .test-accounts {

@@ -6,12 +6,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Brandbergsskolan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+<body class="@(ViewData["LandingGuest"] is true ? "layout-landing-guest" : string.Empty)">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-brandberg shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" asp-page="/Index">
                 <i class="bi bi-calendar-check me-2"></i>Brandbergsskolan
@@ -91,32 +94,46 @@
         </div>
     </nav>
 
-    <main class="container py-4">
-        @if (TempData["SuccessMessage"] != null)
+    <main>
+        @await RenderSectionAsync("FullWidth", required: false)
+        @{
+            var landingGuest = ViewData["LandingGuest"] is true;
+            var hasAlerts = TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null || TempData["InfoMessage"] != null;
+        }
+        @if (!landingGuest || hasAlerts)
         {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle me-2"></i>@TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="container @(landingGuest ? "py-2" : "py-4")">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>@TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["InfoMessage"] != null)
+                {
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>@TempData["InfoMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @RenderBody()
             </div>
         }
-        @if (TempData["ErrorMessage"] != null)
+        else
         {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+            @RenderBody()
         }
-        @if (TempData["InfoMessage"] != null)
-        {
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle me-2"></i>@TempData["InfoMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
-        @RenderBody()
     </main>
 
-    <footer class="footer mt-auto py-3 bg-light border-top">
+    <footer class="footer py-3 bg-light border-top">
         <div class="container text-center text-muted">
             <small>&copy; @DateTime.Now.Year Brandbergsskolan - Frånvarohantering</small>
         </div>

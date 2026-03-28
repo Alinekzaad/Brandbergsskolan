@@ -2,20 +2,15 @@
 @model BrandbergFranvaro.Pages.IndexModel
 @{
     ViewData["Title"] = "Dashboard";
+    var heroImageUrl = Url.Content("~/images/hero.jpg");
+    var isGuest = !User.Identity?.IsAuthenticated ?? true;
+    if (isGuest)
+    {
+        ViewData["LandingGuest"] = true;
+    }
 }
 
-@if (!User.Identity?.IsAuthenticated ?? true)
-{
-    <div class="text-center py-5">
-        <i class="bi bi-calendar-check text-primary" style="font-size: 5rem;"></i>
-        <h1 class="mt-4">Välkommen till Brandbergsskolans Frånvarohantering</h1>
-        <p class="lead text-muted">Logga in för att registrera och hantera frånvaro.</p>
-        <a asp-page="/Account/Login" class="btn btn-primary btn-lg mt-3">
-            <i class="bi bi-box-arrow-in-right me-2"></i>Logga in
-        </a>
-    </div>
-}
-else
+@if (!isGuest)
 {
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -248,3 +243,19 @@ else
     }
 }
 
+@section FullWidth
+{
+    @if (isGuest)
+    {
+        <div class="landing-hero" style="--landing-hero-img: url('@heroImageUrl')">
+            <div class="landing-hero-content container text-center py-5 px-3">
+                <i class="bi bi-calendar-check landing-hero-icon" aria-hidden="true"></i>
+                <h1 class="landing-hero-title mt-4 text-white">Välkommen till Brandbergsskolans Frånvarohantering</h1>
+                <p class="lead text-white-50 mb-0">Logga in för att registrera och hantera frånvaro.</p>
+                <a asp-page="/Account/Login" class="btn btn-light btn-lg mt-4 px-4 shadow">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Logga in
+                </a>
+            </div>
+        </div>
+    }
+}
